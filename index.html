@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1, width=device-width" />
+  <link rel="stylesheet" href="./global.css" />
+  <link rel="stylesheet" href="./horizon.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+</head>
+<body>
+  <div class="home">
+    <section class="search-and-date-wrapper">
+      <div class="search-and-date">
+        <div class="date">
+          <h1 class="monday" id="day">Loading...</h1>
+          <div class="jul-2024" id="date">Loading...</div>
+        </div>
+        <div class="search-bar">
+          <input type="text" id="city-input" placeholder="Search for cities" class="search-for-cities" onkeypress="handleKeyPress(event)" />
+        </div>
+      </div>
+    </section>
+    <section class="location-weather">
+      <div class="background2"></div>
+      <div class="location-icon-row-wrapper">
+        <div class="location-icon-row">
+          <div class="location-details">
+            <div class="location-name">
+              <div class="location-icon-container">
+                <img class="location-icon" id="location-icon" loading="lazy" alt="" src="./assets/location icon.png" />
+              </div>
+              <h3 class="location" id="location-name">Loading...</h3>
+            </div>
+            <div class="weather-icon">
+              <img id="weather-icon" src="./assets/suny.png" alt="Weather Icon" />
+            </div>
+          </div>
+          <div class="temperature">
+            <div class="temp" id="temperature">Loading...</div>
+          </div>
+        </div>
+      </div>
+      <div class="humidity-wind">
+        <div class="humidity">
+          <div class="humidity-wind-labels">
+            <b class="humidity1">Humidity</b>
+            <div class="wind-speed-unit" id="humidity">Loading...</div>
+          </div>
+        </div>
+        <div class="wind">
+          <div class="wind-speed-parent">
+            <b class="wind-speed">Wind speed</b>
+            <div class="kmh" id="wind-speed">Loading...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const apiKey = 'af1b67ac68a342b3a7d153240240907';
+
+    async function fetchWeatherByLocation(lat, lon) {
+      const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${lat},${lon}`);
+      const data = await response.json();
+      updateWeather(data);
+    }
+
+    async function getWeather() {
+      const city = document.getElementById('city-input').value;
+      const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`);
+      const data = await response.json();
+      updateWeather(data);
+    }
+
+    function updateWeather(data) {
+      // Update day and date
+      const date = new Date(data.location.localtime);
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      document.getElementById('day').innerText = days[date.getDay()];
+      document.getElementById('date').innerText = date.toDateString().split(' ').slice(1).join(' ');
+
+      document.getElementById('location-name').innerText = data.location.name;
+      document.getElementById('temperature').innerText = `${data.current.temp_c}°C`;
+      document.getElementById('humidity').innerText = `${data.current.humidity}%`;
+      document.getElementById('wind-speed').innerText = `${data.current.wind_kph} km/h`;
+
+      const weatherCondition = data.current.condition.text.toLowerCase();
+      let weatherIconSrc = './assets/suny.png';
+
+      if (weatherCondition.includes('cloudy')) {
+        weatherIconSrc = './assets/Cloudy.png';
+      } else if (weatherCondition.includes('rain')) {
+        weatherIconSrc = './assets/rainy.png';
+      }
+
+      document.getElementById('weather-icon').src = weatherIconSrc;
+    }
+
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        getWeather();
+      }
+    }
+
+    function init() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          const { latitude, longitude } = position.coords;
+          fetchWeatherByLocation(latitude, longitude);
+        }, () => {
+          alert('Geolocation is not supported by this browser or permission denied.');
+        });
+      } else {
+        alert('Geolocation is not supported by this browser.');
+      }
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
