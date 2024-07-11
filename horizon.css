@@ -71,6 +71,7 @@
     font-size: var(--font-size-29xl);
     color: var(--color-white);
     font-family: var(--font-inter);
+    z-index: 1;
   }
   .background2 {
     height: 478px;
@@ -97,16 +98,16 @@
     font-weight: 400;
     font-family: inherit;
     display: inline-block;
-    white-space: nowrap; /* Prevent line break */
+    white-space: nowrap; 
     min-width: 120px;
     z-index: 1;
   }
   .location-name {
     display: flex;
     flex-direction: row;
-    align-items: center; /* Center align items vertically */
+    align-items: center; 
     justify-content: flex-start;
-    gap: 10px; /* Adjust gap as needed */
+    gap: 10px; 
   }
   .suny {
     align-self: stretch;
@@ -261,11 +262,16 @@
     font-size: 36px;
     color: var(--color-white);
     font-family: var(--font-inter);
+    z-index: 1;
   }
   .home {
     width: 100%;
     position: relative;
-    background-color: #19222b;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    background-color: hsla(234, 40%, 11%, 1);
+    font-family: 'Inter', sans-serif;
     overflow: hidden;
     flex-direction: column;
     align-items: center;
@@ -275,6 +281,21 @@
     line-height: normal;
     letter-spacing: normal;
   }
+  .background-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: hsla(234, 40%, 11%, 1);
+    background-image:
+        radial-gradient(at 94% 9%, hsla(227, 100%, 65%, 1) 0px, transparent 50%),
+        radial-gradient(at 0% 98%, hsla(204, 81%, 56%, 1) 0px, transparent 50%),
+        radial-gradient(at 74% 75%, hsla(20, 100%, 60%, 0.91) 0px, transparent 50%);
+    animation: gradientAnimation 10s linear infinite; 
+    z-index: 0; 
+    filter: blur(50px);
+}
   @media screen and (max-width: 975px) {
     .location-weather,
     .search-and-date-wrapper {
@@ -325,4 +346,29 @@
       width: 100%;
     }
   }
-  
+  @keyframes gradientAnimation {
+    0%, 100% {
+        background-image:
+            radial-gradient(at 94% 9%, hsla(227, 100%, 65%, 1) 0px, transparent 50%),
+            radial-gradient(at 0% 98%, hsla(204, 81%, 56%, 1) 0px, transparent 50%),
+            radial-gradient(at 74% 75%, hsla(20, 100%, 60%, 0.91) 0px, transparent 50%);
+    }
+    25% {
+        background-image:
+            radial-gradient(at 60% 40%, hsla(227, 100%, 65%, 1) 0px, transparent 50%),
+            radial-gradient(at 40% 60%, hsla(204, 81%, 56%, 1) 0px, transparent 50%),
+            radial-gradient(at 80% 20%, hsla(20, 100%, 60%, 0.91) 0px, transparent 50%);
+    }
+    50% {
+        background-image:
+            radial-gradient(at 40% 60%, hsla(227, 100%, 65%, 1) 0px, transparent 50%),
+            radial-gradient(at 60% 40%, hsla(204, 81%, 56%, 1) 0px, transparent 50%),
+            radial-gradient(at 20% 80%, hsla(20, 100%, 60%, 0.91) 0px, transparent 50%);
+    }
+    75% {
+        background-image:
+            radial-gradient(at 20% 80%, hsla(227, 100%, 65%, 1) 0px, transparent 50%),
+            radial-gradient(at 80% 20%, hsla(204, 81%, 56%, 1) 0px, transparent 50%),
+            radial-gradient(at 60% 40%, hsla(20, 100%, 60%, 0.91) 0px, transparent 50%);
+    }
+}
